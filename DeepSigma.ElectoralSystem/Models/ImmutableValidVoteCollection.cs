@@ -13,7 +13,7 @@ internal class ImmutableValidVoteCollection<VoteDetails> where VoteDetails : IDe
     /// <summary>
     /// The set of individually submitted votes.
     /// </summary>
-    ImmutableHashSet<Vote<VoteDetails>> SubmitedVotes { get; init; } = [];
+    HashSet<Vote<VoteDetails>> SubmitedVotes { get; init; } = [];
 
     /// <summary>
     /// Adds a single vote to the collection.
@@ -45,7 +45,7 @@ internal class ImmutableValidVoteCollection<VoteDetails> where VoteDetails : IDe
     internal Dictionary<VoteDetails, int> TallyVotes()
     {
         Dictionary<VoteDetails, int> voteCount = [];
-        foreach (var vote in SubmitedVotes)
+        foreach (Vote<VoteDetails> vote in SubmitedVotes)
         {
             if (voteCount.ContainsKey(vote.Details))
             {
@@ -57,5 +57,5 @@ internal class ImmutableValidVoteCollection<VoteDetails> where VoteDetails : IDe
             }
         }
         return voteCount;
-    })
+    }
 }

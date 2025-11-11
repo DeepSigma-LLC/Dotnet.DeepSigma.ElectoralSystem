@@ -4,15 +4,16 @@ using DeepSigma.General;
 
 namespace DeepSigma.ElectoralSystem.Models;
 
-
 /// <summary>
 /// Represents a casted vote.
 /// </summary>
 /// <typeparam name="VoteDetails"></typeparam>
-public record class Vote<VoteDetails>(VoterInfo VoterInfo, VoteDetails Details, byte[] SignedVoteHash) where VoteDetails : IDeterministicObjectOutput
+/// <param name="VoterInfo">Information about the voter.</param>
+/// <param name="Details">The details of the vote.</param>
+/// <param name="SignedVoteHash">The digitally signed hash of the vote details.</param>
+/// <param name="HashAlgorithm">The hash algorithm used for signing the vote.</param>
+public record class Vote<VoteDetails>(VoterInfo VoterInfo, VoteDetails Details, byte[] SignedVoteHash, HashAlgorithmName HashAlgorithm) where VoteDetails : IDeterministicObjectOutput
 {
-    private HashAlgorithmName HashAlgorithmName { get; set; } = HashAlgorithmName.SHA256;
-
     /// <summary>
     /// Validates the vote by verifying the digital signature using the voter's public key.
     /// </summary>
@@ -24,9 +25,9 @@ public record class Vote<VoteDetails>(VoterInfo VoterInfo, VoteDetails Details, 
 
         if (read_bytes != VoterInfo.VoterPublicKey.Length) return false;
 
-        byte[] hashed_data = Details.ToDeterministicHash(HashAlgorithmName);
+        byte[] hashed_data = Details.ToDeterministicHash(HashAlgorithm);
 
-        return CryptoUtilities.EllipticCurveDigitalVerifyData(hashed_data, SignedVoteHash, ecdsa, HashAlgorithmName);
+        return CryptoUtilities.EllipticCurveDigitalVerifyData(hashed_data, SignedVoteHash, ecdsa, HashAlgorithm);
     }
 
 }
