@@ -12,7 +12,7 @@ public enum ElectoralSystemType
     /// Pros: Simple to understand and implement, and often leads to stable governments.
     /// Con: Can produce winners who do not have majority support and often leads to two-party systems.
     /// </summary>
-    PluralityFirstPastthePost,
+    PluralityFirstPastThePost,
     /// <summary>
     /// Majority voting rule where if no candidate receives a majority of votes, the top two candidates proceed to a runoff election.
     /// Also known as two-round system and often leads to two-party systems.

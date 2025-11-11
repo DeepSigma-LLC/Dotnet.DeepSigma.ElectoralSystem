@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Title>DeepSigma.ElectoralSystem</Title>
-    <Version>1.0.2</Version>
+    <Version>1.0.3</Version>
     <Authors>DeepSigma LLC</Authors>
     <Description>C# package for voting system implementations.</Description>
     <PackageProjectUrl>https://github.com/DeepSigma-LLC/Dotnet.DeepSigma.ElectoralSystem</PackageProjectUrl>
