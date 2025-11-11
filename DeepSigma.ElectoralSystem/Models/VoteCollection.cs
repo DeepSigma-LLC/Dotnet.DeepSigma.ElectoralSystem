@@ -9,11 +9,6 @@ namespace DeepSigma.ElectoralSystem.Models;
 public class VoteCollection<VoteDetails>() where VoteDetails : IDeterministicObjectOutput
 {
     /// <summary>
-    /// The voting system used for tallying votes.
-    /// </summary>
-    public Enum.ElectoralSystem VotingSystem { get; } = Enum.ElectoralSystem.PluralityFirstPastthePost;
-
-    /// <summary>
     /// The set of individually submitted votes.
     /// </summary>
     ImmutableValidVoteCollection<VoteDetails> Votes { get; } = new();
@@ -68,7 +63,7 @@ public class VoteCollection<VoteDetails>() where VoteDetails : IDeterministicObj
     }
 
     /// <summary>
-    /// Gets the winning vote, or null in case of a tie.
+    /// Gets the top vote, or null in case of a tie.
     /// </summary>
     /// <returns></returns>
     public VoteDetails? GetTopVote()

@@ -31,6 +31,7 @@ public enum ElectoralSystem
     PreferentialInstantRunoff,
     /// <summary>
     /// Preferential voting rule where voters rank candidates in order of preference and points are assigned based on the ranking.
+    /// For example, in a 3-candidate race a first-place vote might be worth 2 points, a second-place vote 1 point, and a third-place vote 0 points.
     /// The candidate with the highest total points wins.
     /// Pros: Reflects the overall preference of the electorate more accurately than simple plurality systems.
     /// Cons: Can be more complex to understand and implement, and may still be susceptible to strategic voting.
