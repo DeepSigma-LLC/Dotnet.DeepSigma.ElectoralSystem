@@ -4,6 +4,7 @@ using DeepSigma.ElectoralSystem.Tests.Models;
 using System.Security.Cryptography;
 using DeepSigma.General.Utilities;
 using DeepSigma.General;
+using DeepSigma.ElectoralSystem.Enums;
 
 namespace DeepSigma.ElectoralSystem.Tests.Tests;
 
@@ -13,7 +14,7 @@ public class VoteCollection_Tests
 
     private static VoterInfo GetVoterInfo()
     {
-        return new VoterInfo("Alice", ecc.ExportSubjectPublicKeyInfo(), Enum.PublicKeyCryptographyAlgorithm.EllipticCurve);
+        return new VoterInfo("Alice", ecc.ExportSubjectPublicKeyInfo(), PublicKeyCryptographyAlgorithm.EllipticCurve);
     }
 
     [Fact]

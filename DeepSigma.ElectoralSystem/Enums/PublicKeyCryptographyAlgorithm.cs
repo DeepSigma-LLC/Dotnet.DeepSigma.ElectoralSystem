@@ -1,5 +1,4 @@
-﻿
-namespace DeepSigma.ElectoralSystem.Enum;
+﻿namespace DeepSigma.ElectoralSystem.Enums;
 
 /// <summary>
 /// Public Key Cryptography Algorithms

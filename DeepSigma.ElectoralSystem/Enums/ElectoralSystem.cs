@@ -1,4 +1,4 @@
-﻿namespace DeepSigma.ElectoralSystem.Enum;
+﻿namespace DeepSigma.ElectoralSystem.Enums;
 
 /// <summary>
 /// Voting rules used in decision-making processes.

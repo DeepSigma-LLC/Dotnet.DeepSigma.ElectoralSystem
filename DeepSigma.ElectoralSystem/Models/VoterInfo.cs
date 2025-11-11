@@ -1,4 +1,4 @@
-﻿using DeepSigma.ElectoralSystem.Enum;
+﻿using DeepSigma.ElectoralSystem.Enums;
 
 namespace DeepSigma.ElectoralSystem.Models;
 
