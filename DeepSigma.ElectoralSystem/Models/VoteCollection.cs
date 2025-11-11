@@ -22,18 +22,24 @@ public class VoteCollection<VoteDetails>() where VoteDetails : IDeterministicObj
     /// Adds a new vote to the collection.
     /// </summary>
     /// <param name="vote"></param>
-    public void Add(Vote<VoteDetails> vote)
+    public Exception? Add(Vote<VoteDetails> vote)
     {
-        Votes.Add(vote);
+        return Votes.Add(vote);
     }
 
     /// <summary>
     /// Adds a range of votes to the collection.
     /// </summary>
     /// <param name="votes"></param>
-    public void AddRange(HashSet<Vote<VoteDetails>> votes)
+    public bool TryAddRange(HashSet<Vote<VoteDetails>> votes)
     {
-        Votes.Add(votes);
+        bool errored = false;
+        foreach(var vote in votes)
+        {
+            Exception? error = Votes.Add(vote);
+            if (error is not null) errored = true;
+        }
+        return errored;
     }
 
     /// <summary>
@@ -110,5 +116,19 @@ public class VoteCollection<VoteDetails>() where VoteDetails : IDeterministicObj
                 }
                 return default; // No majority
         }
+    }
+
+    /// <summary>
+    /// Gets the unanimous vote, or null if not all votes are the same.
+    /// </summary>
+    /// <returns></returns>
+    public VoteDetails? GetUnanimousVote()
+    {
+        Dictionary<VoteDetails, int> VoteCount = GetAllVoteCount();
+        if (VoteCount.Count == 1)
+        {
+            return VoteCount.Keys.First();
+        }
+        return default;
     }
 }

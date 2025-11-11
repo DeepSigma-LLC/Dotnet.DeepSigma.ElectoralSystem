@@ -1,6 +1,5 @@
 ﻿
 using DeepSigma.General;
-using System.Collections.Immutable;
 
 namespace DeepSigma.ElectoralSystem.Models;
 
@@ -19,23 +18,24 @@ internal class ImmutableValidVoteCollection<VoteDetails> where VoteDetails : IDe
     /// Adds a single vote to the collection.
     /// </summary>
     /// <param name="vote"></param>
-    internal void Add(Vote<VoteDetails> vote)
+    internal Exception? Add(Vote<VoteDetails> vote)
     {
-        if (vote.IsVoteValid() == false) return;
+        if (!vote.IsVoteValid()) return new Exception("Vote is invalid.");
+        if(VoterHasVoted(vote.VoterInfo)) return new Exception("Voter has already voted.");
 
         SubmitedVotes.Add(vote); 
+        return default;
     }
 
     /// <summary>
-    /// Adds a set of votes to the collection.
+    /// Checks if a voter has already voted.
     /// </summary>
-    /// <param name="votes"></param>
-    internal void Add(HashSet<Vote<VoteDetails>> votes)
+    /// <param name="voter"></param>
+    /// <returns></returns>
+    internal bool VoterHasVoted(VoterInfo voter)
     {
-        foreach (var vote in votes)
-        {
-            Add(vote);
-        }
+        var votes = SubmitedVotes.Where(v => v.VoterInfo.VoterPublicKey.SequenceEqual(voter.VoterPublicKey));
+        return votes.Any();
     }
 
     /// <summary>
@@ -44,18 +44,18 @@ internal class ImmutableValidVoteCollection<VoteDetails> where VoteDetails : IDe
     /// <returns></returns>
     internal Dictionary<VoteDetails, int> TallyVotes()
     {
-        Dictionary<VoteDetails, int> voteCount = [];
+        Dictionary<VoteDetails, int> vote_tally = [];
         foreach (Vote<VoteDetails> vote in SubmitedVotes)
         {
-            if (voteCount.ContainsKey(vote.Details))
+            if (vote_tally.ContainsKey(vote.Details))
             {
-                voteCount[vote.Details]++;
+                vote_tally[vote.Details]++;
             }
             else
             {
-                voteCount[vote.Details] = 1;
+                vote_tally[vote.Details] = 1;
             }
         }
-        return voteCount;
+        return vote_tally;
     }
 }

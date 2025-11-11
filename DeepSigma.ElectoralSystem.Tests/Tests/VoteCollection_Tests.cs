@@ -32,6 +32,7 @@ public class VoteCollection_Tests
         Assert.Equal(1, votes.GetVoteCountByVote(vote_details));
         Assert.Equal(vote_details, votes.GetTopVote());
         Assert.Equal(vote_details, votes.GetMajorityVote());
+        Assert.Equal(vote_details, votes.GetUnanimousVote());
     }
 
     [Fact]
@@ -64,6 +65,8 @@ public class VoteCollection_Tests
         Assert.Null(votes.GetTopVote());
         // No majority vote since no vote has more than half the votes
         Assert.Null(votes.GetMajorityVote());
+        // No unanimous vote since not all votes are the same
+        Assert.Null(votes.GetUnanimousVote());
     }
 
 
@@ -95,6 +98,8 @@ public class VoteCollection_Tests
         Assert.Equal(vote_details, votes.GetTopVote());
         // Majority vote should be vote_details since it has more than half the votes
         Assert.Equal(vote_details, votes.GetMajorityVote());
+        // No unanimous vote since not all votes are the same
+        Assert.Null(votes.GetUnanimousVote());
     }
 
 }
