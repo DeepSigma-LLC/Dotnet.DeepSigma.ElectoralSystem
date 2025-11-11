@@ -9,9 +9,9 @@ namespace DeepSigma.ElectoralSystem.Tests.Tests;
 
 public class VoteCollection_Tests
 {
-    public static ECDsa ecc = ECDsa.Create(ECCurve.NamedCurves.nistP256);
+    private static ECDsa ecc = ECDsa.Create(ECCurve.NamedCurves.nistP256);
 
-    public static VoterInfo GetVoterInfo()
+    private static VoterInfo GetVoterInfo()
     {
         return new VoterInfo("Alice", ecc.ExportSubjectPublicKeyInfo(), Enum.PublicKeyCryptographyAlgorithm.EllipticCurve);
     }
