@@ -4,7 +4,7 @@
 /// Voting rules used in decision-making processes.
 /// Also known as electoral systems or voting systems.
 /// </summary>
-public enum VotingSystem
+public enum ElectoralSystem
 {
     /// <summary>
     /// Simple plurality voting rule where the candidate with the most votes wins.

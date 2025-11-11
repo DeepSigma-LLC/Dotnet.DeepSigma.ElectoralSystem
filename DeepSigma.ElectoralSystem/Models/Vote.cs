@@ -8,8 +8,8 @@ namespace DeepSigma.ElectoralSystem.Models;
 /// <summary>
 /// Represents a casted vote.
 /// </summary>
-/// <typeparam name="T"></typeparam>
-public record class Vote<T>(VoterInfo VoterInfo, T VoteDetails, byte[] SignedVoteHash) where T : IDeterministicObjectOutput
+/// <typeparam name="VoteDetails"></typeparam>
+public record class Vote<VoteDetails>(VoterInfo VoterInfo, VoteDetails Details, byte[] SignedVoteHash) where VoteDetails : IDeterministicObjectOutput
 {
     private HashAlgorithmName HashAlgorithmName { get; set; } = HashAlgorithmName.SHA256;
 
@@ -24,7 +24,7 @@ public record class Vote<T>(VoterInfo VoterInfo, T VoteDetails, byte[] SignedVot
 
         if (read_bytes != VoterInfo.VoterPublicKey.Length) return false;
 
-        byte[] hashed_data = VoteDetails.ToDeterministicHash(HashAlgorithmName);
+        byte[] hashed_data = Details.ToDeterministicHash(HashAlgorithmName);
 
         return CryptoUtilities.EllipticCurveDigitalVerifyData(hashed_data, SignedVoteHash, ecdsa, HashAlgorithmName);
     }

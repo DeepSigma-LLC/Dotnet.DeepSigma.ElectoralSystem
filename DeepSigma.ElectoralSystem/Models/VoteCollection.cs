@@ -1,91 +1,114 @@
-﻿using DeepSigma.ElectoralSystem.Enum;
-using DeepSigma.General;
+﻿using DeepSigma.General;
 
 namespace DeepSigma.ElectoralSystem.Models;
 
 /// <summary>
 /// Represents a collection of votes cast by voters.
-/// Note: This 
 /// </summary>
-/// <typeparam name="T"></typeparam>
-public class VoteCollection<T>() where T : IDeterministicObjectOutput
+/// <typeparam name="VoteDetails"></typeparam>
+public class VoteCollection<VoteDetails>() where VoteDetails : IDeterministicObjectOutput
 {
     /// <summary>
     /// The voting system used for tallying votes.
     /// </summary>
-    public VotingSystem VotingSystem { get; } = VotingSystem.PluralityFirstPastthePost;
+    public Enum.ElectoralSystem VotingSystem { get; } = Enum.ElectoralSystem.PluralityFirstPastthePost;
 
     /// <summary>
     /// The set of individually submitted votes.
     /// </summary>
-    HashSet<Vote<T>> SubmitedVotes { get; init; } = [];
-
-    /// <summary>
-    /// The mapping of votes to their respective counts.
-    /// </summary>
-    Dictionary<T, int> VoteCount { get; init; } = [];
+    ImmutableValidVoteCollection<VoteDetails> Votes { get; } = new();
 
     /// <summary>
     /// Adds a new vote to the collection.
     /// </summary>
-    /// <param name="nodeVote"></param>
-    public void Add(Vote<T> nodeVote)
+    /// <param name="vote"></param>
+    public void Add(Vote<VoteDetails> vote)
     {
-        if (nodeVote.IsVoteValid() == false) return;
-
-        SubmitedVotes.Add(nodeVote);
-
-        if (VoteCount.ContainsKey(nodeVote.VoteDetails))
-        {
-            VoteCount[nodeVote.VoteDetails]++;
-        }
-        else
-        {
-            VoteCount[nodeVote.VoteDetails] = 1;
-        }
+        Votes.Add(vote);
     }
 
     /// <summary>
     /// Adds a range of votes to the collection.
     /// </summary>
-    /// <param name="nodeVotes"></param>
-    public void AddRange(IEnumerable<Vote<T>> nodeVotes)
+    /// <param name="votes"></param>
+    public void AddRange(HashSet<Vote<VoteDetails>> votes)
     {
-        foreach (var vote in nodeVotes)
-        {
-            Add(vote);
-        }
+        Votes.Add(votes);
+    }
+
+    /// <summary>
+    /// Gets the complete vote count for all votes.
+    /// </summary>
+    /// <returns></returns>
+    public Dictionary<VoteDetails, int> GetAllVoteCount()
+    {
+        return Votes.TallyVotes();
     }
 
     /// <summary>
     /// The total number of votes in the collection.
     /// </summary>
-    public int TotalVotes => VoteCount.Values.Sum();
+    public int TotalVotes => GetAllVoteCount().Values.Sum();
 
     /// <summary>
     /// Gets the vote count for a specific vote.
     /// </summary>
     /// <param name="Vote"></param>
     /// <returns></returns>
-    public int GetVoteCountByVote(T Vote)
+    public int GetVoteCountByVote(VoteDetails Vote)
     {
-        return VoteCount.TryGetValue(Vote, out int count) ? count : 0;
+        bool found = GetAllVoteCount().TryGetValue(Vote, out int count);
+        return found ? count : 0;
     }
 
     /// <summary>
     /// Gets the winning vote, or null in case of a tie.
     /// </summary>
     /// <returns></returns>
-    public T? GetWinningVote()
+    public VoteDetails? GetTopVote()
     {
-        if (VoteCount.Count == 0) return default;
-        int maxVotes = VoteCount.Values.Max();
+        Dictionary<VoteDetails, int> VoteCount = GetAllVoteCount();
 
-        List<T> winningVotes = VoteCount.Where(kvp => kvp.Value == maxVotes).Select(kvp => kvp.Key).ToList();
-        if (winningVotes.Count == 1)
+        switch (VoteCount.Count)
         {
-            return winningVotes[0];
+            case 0:
+                return default;
+            case 1:
+                return VoteCount.Keys.First();
+            default:
+                List<(VoteDetails vote, int vote_count)> top_votes = VoteCount
+                    .OrderByDescending(kvp => kvp.Value).Take(2)
+                    .Select(kvp => (kvp.Key, kvp.Value)).ToList();
+
+                if (top_votes[0].vote_count > top_votes[1].vote_count)
+                {
+                    return top_votes[0].vote;
+                }
+                return default;
         }
-        return default; // Tie
+    }
+
+    /// <summary>
+    /// Gets the majority vote, or null if no majority exists.
+    /// </summary>
+    /// <returns></returns>
+    public VoteDetails? GetMajorityVote()
+    {
+        Dictionary<VoteDetails, int> VoteCount = GetAllVoteCount();
+
+        switch(VoteCount.Count)
+        {
+            case 0:
+                return default;
+            case 1:
+                return VoteCount.Keys.First();
+            default:
+                (VoteDetails top_vote, int vote_count) = VoteCount.OrderByDescending(kvp => kvp.Value).First();
+                if (vote_count > TotalVotes / 2)
+                {
+                    return top_vote;
+                }
+                return default; // No majority
+        }
     }
 }
