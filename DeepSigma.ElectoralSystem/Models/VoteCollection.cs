@@ -41,7 +41,7 @@ public class VoteCollection<VoteDetails>() where VoteDetails : IDeterministicObj
     /// Gets the complete vote count for all votes.
     /// </summary>
     /// <returns></returns>
-    public Dictionary<VoteDetails, int> GetAllVoteCount()
+    public Dictionary<VoteDetails, (int VoteCount, decimal WeightedVoteTotal)> TallyVotes()
     {
         return Votes.TallyVotes();
     }
@@ -49,17 +49,22 @@ public class VoteCollection<VoteDetails>() where VoteDetails : IDeterministicObj
     /// <summary>
     /// The total number of votes in the collection.
     /// </summary>
-    public int TotalVotes => GetAllVoteCount().Values.Sum();
+    public int TotalVotes => Votes.GetValidVotes().Count;
+
+    /// <summary>
+    /// The total weighted votes in the collection.
+    /// </summary>
+    public decimal TotalWeightedVotes => TallyVotes().Values.Select(vc => vc.WeightedVoteTotal).Sum();
 
     /// <summary>
     /// Gets the vote count for a specific vote.
     /// </summary>
     /// <param name="Vote"></param>
     /// <returns></returns>
-    public int GetVoteCountByVote(VoteDetails Vote)
+    public (int VoteCount, decimal WeightedTotal) GetVoteCountByVote(VoteDetails Vote)
     {
-        bool found = GetAllVoteCount().TryGetValue(Vote, out int count);
-        return found ? count : 0;
+        bool found = TallyVotes().TryGetValue(Vote, out (int, decimal) result);
+        return found ? result : (0, 0);
     }
 
     /// <summary>
@@ -68,7 +73,7 @@ public class VoteCollection<VoteDetails>() where VoteDetails : IDeterministicObj
     /// <returns></returns>
     public VoteDetails? GetTopVote()
     {
-        Dictionary<VoteDetails, int> VoteCount = GetAllVoteCount();
+        Dictionary<VoteDetails, (int VoteTotal, decimal WeightedVoteTotal)> VoteCount = TallyVotes();
 
         switch (VoteCount.Count)
         {
@@ -77,11 +82,11 @@ public class VoteCollection<VoteDetails>() where VoteDetails : IDeterministicObj
             case 1:
                 return VoteCount.Keys.First();
             default:
-                List<(VoteDetails vote, int vote_count)> top_votes = VoteCount
-                    .OrderByDescending(kvp => kvp.Value).Take(2)
-                    .Select(kvp => (kvp.Key, kvp.Value)).ToList();
+                List<(VoteDetails vote, decimal weighted_total)> top_votes = VoteCount
+                    .OrderByDescending(kvp => kvp.Value.WeightedVoteTotal).Take(2)
+                    .Select(kvp => (kvp.Key, kvp.Value.WeightedVoteTotal)).ToList();
 
-                if (top_votes[0].vote_count > top_votes[1].vote_count)
+                if (top_votes[0].weighted_total > top_votes[1].weighted_total)
                 {
                     return top_votes[0].vote;
                 }
@@ -95,7 +100,7 @@ public class VoteCollection<VoteDetails>() where VoteDetails : IDeterministicObj
     /// <returns></returns>
     public VoteDetails? GetMajorityVote()
     {
-        Dictionary<VoteDetails, int> VoteCount = GetAllVoteCount();
+        Dictionary<VoteDetails, (int VoteCount, decimal WeightedVoteTotal)> VoteCount = TallyVotes();
 
         switch(VoteCount.Count)
         {
@@ -104,8 +109,8 @@ public class VoteCollection<VoteDetails>() where VoteDetails : IDeterministicObj
             case 1:
                 return VoteCount.Keys.First();
             default:
-                (VoteDetails top_vote, int vote_count) = VoteCount.OrderByDescending(kvp => kvp.Value).First();
-                if (vote_count > TotalVotes / 2)
+                (VoteDetails top_vote, (int vote_count, decimal weighted_vote_total)) = VoteCount.OrderByDescending(kvp => kvp.Value.WeightedVoteTotal).First();
+                if (weighted_vote_total > TotalWeightedVotes / 2)
                 {
                     return top_vote;
                 }
@@ -119,7 +124,7 @@ public class VoteCollection<VoteDetails>() where VoteDetails : IDeterministicObj
     /// <returns></returns>
     public VoteDetails? GetUnanimousVote()
     {
-        Dictionary<VoteDetails, int> VoteCount = GetAllVoteCount();
+        Dictionary<VoteDetails, (int VoteCount, decimal WeightedVoteTotal)> VoteCount = TallyVotes();
         if (VoteCount.Count == 1)
         {
             return VoteCount.Keys.First();

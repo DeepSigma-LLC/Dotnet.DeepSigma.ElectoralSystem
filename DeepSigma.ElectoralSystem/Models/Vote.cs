@@ -12,7 +12,8 @@ namespace DeepSigma.ElectoralSystem.Models;
 /// <param name="Details">The details of the vote.</param>
 /// <param name="SignedVoteHash">The digitally signed hash of the vote details.</param>
 /// <param name="HashAlgorithm">The hash algorithm used for signing the vote.</param>
-public record class Vote<VoteDetails>(VoterInfo VoterInfo, VoteDetails Details, byte[] SignedVoteHash, HashAlgorithmName HashAlgorithm) where VoteDetails : IDeterministicObjectOutput
+/// <param name="Weight">The weight of the vote. Default = 1 meaning each vote has equal weight.</param>
+public record class Vote<VoteDetails>(VoterInfo VoterInfo, VoteDetails Details, byte[] SignedVoteHash, HashAlgorithmName HashAlgorithm, decimal Weight = 1) where VoteDetails : IDeterministicObjectOutput
 {
     /// <summary>
     /// Validates the vote by verifying the digital signature using the voter's public key.
