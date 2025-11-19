@@ -100,21 +100,37 @@ public class VoteCollection<VoteDetails>() where VoteDetails : IDeterministicObj
     /// <returns></returns>
     public VoteDetails? GetMajorityVote()
     {
-        Dictionary<VoteDetails, (int VoteCount, decimal WeightedVoteTotal)> VoteCount = TallyVotes();
+        var result = GetMajorityVoteUsingCustomThreshold(0.5);
+        return result.result; // Ignore error for this method
+    }
 
-        switch(VoteCount.Count)
+    /// <summary>
+    /// Gets the majority vote using a custom threshold, or null if no majority exists.
+    /// </summary>
+    /// <param name="majority_threshold_percentage"> The custom threshold for majority. Defaults to 0.5 (aka 50%).</param>
+    /// <returns></returns>
+    public (VoteDetails? result, Exception? error) GetMajorityVoteUsingCustomThreshold(double majority_threshold_percentage =  0.5)
+    {
+        if (majority_threshold_percentage < 0 || majority_threshold_percentage > 1)
+        {
+            return (default, new ArgumentOutOfRangeException(nameof(majority_threshold_percentage), "Majority threshold percentage must be between 0 (inclusive) and 1 (inclusive)."));
+        }
+
+        Dictionary<VoteDetails, (int VoteCount, decimal WeightedVoteTotal)> VoteCount = TallyVotes();
+        decimal majority_threshold_amount = TotalWeightedVotes * (decimal)majority_threshold_percentage;
+        switch (VoteCount.Count)
         {
             case 0:
-                return default;
+                return (default, null);
             case 1:
-                return VoteCount.Keys.First();
+                return (VoteCount.Keys.First(), null);
             default:
                 (VoteDetails top_vote, (int vote_count, decimal weighted_vote_total)) = VoteCount.OrderByDescending(kvp => kvp.Value.WeightedVoteTotal).First();
-                if (weighted_vote_total > TotalWeightedVotes / 2)
+                if (weighted_vote_total > majority_threshold_amount)
                 {
-                    return top_vote;
+                    return (top_vote, null);
                 }
-                return default; // No majority
+                return (default, null); // No majority
         }
     }
 
