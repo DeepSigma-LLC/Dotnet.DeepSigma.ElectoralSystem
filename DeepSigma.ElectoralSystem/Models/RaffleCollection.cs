@@ -7,7 +7,7 @@ namespace DeepSigma.ElectoralSystem.Models;
 /// Represents a raffle collection.
 /// </summary>
 /// <typeparam name="VoteDetails"></typeparam>
-public class RaffleCollection<VoteDetails> where VoteDetails : IDeterministicObjectOutput
+public class RaffleCollection<VoteDetails> where VoteDetails : class
 {
     WeightedRandom<VoteDetails> VoteCollection { get; set; } = new();
 

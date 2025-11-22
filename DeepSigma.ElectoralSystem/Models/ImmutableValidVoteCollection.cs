@@ -7,7 +7,7 @@ namespace DeepSigma.ElectoralSystem.Models;
 /// A collection of valid votes that cannot be modified after creation.
 /// </summary>
 /// <typeparam name="VoteDetails"></typeparam>
-internal class ImmutableValidVoteCollection<VoteDetails> where VoteDetails : IDeterministicObjectOutput
+internal class ImmutableValidVoteCollection<VoteDetails> where VoteDetails : class
 {
     /// <summary>
     /// The set of individually submitted votes.

@@ -1,6 +1,6 @@
 ﻿using DeepSigma.General.Utilities;
 using System.Security.Cryptography;
-using DeepSigma.General;
+using DeepSigma.General.Extensions;
 
 namespace DeepSigma.ElectoralSystem.Models;
 
@@ -13,7 +13,7 @@ namespace DeepSigma.ElectoralSystem.Models;
 /// <param name="SignedVoteHash">The digitally signed hash of the vote details.</param>
 /// <param name="HashAlgorithm">The hash algorithm used for signing the vote.</param>
 /// <param name="Weight">The weight of the vote. Default = 1 meaning each vote has equal weight.</param>
-public record class Vote<VoteDetails>(VoterInfo VoterInfo, VoteDetails Details, byte[] SignedVoteHash, HashAlgorithmName HashAlgorithm, decimal Weight = 1) where VoteDetails : IDeterministicObjectOutput
+public record class Vote<VoteDetails>(VoterInfo VoterInfo, VoteDetails Details, byte[] SignedVoteHash, HashAlgorithmName HashAlgorithm, decimal Weight = 1) where VoteDetails : class
 {
     /// <summary>
     /// Validates the vote by verifying the digital signature using the voter's public key.

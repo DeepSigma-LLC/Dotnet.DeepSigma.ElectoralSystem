@@ -1,12 +1,11 @@
-﻿using DeepSigma.General;
-
+﻿
 namespace DeepSigma.ElectoralSystem.Models;
 
 /// <summary>
 /// Represents a collection of votes cast by voters.
 /// </summary>
 /// <typeparam name="VoteDetails"></typeparam>
-public class VoteCollection<VoteDetails>() where VoteDetails : IDeterministicObjectOutput
+public class VoteCollection<VoteDetails>() where VoteDetails : class
 {
     /// <summary>
     /// The set of individually submitted votes.
