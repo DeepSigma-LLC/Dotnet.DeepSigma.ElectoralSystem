@@ -6,17 +6,26 @@
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Title>DeepSigma.ElectoralSystem</Title>
-    <Version>1.1.0</Version>
+    <Version>1.2.0</Version>
     <Authors>DeepSigma LLC</Authors>
     <Description>C# package for voting system implementations.</Description>
     <PackageProjectUrl>https://github.com/DeepSigma-LLC/Dotnet.DeepSigma.ElectoralSystem</PackageProjectUrl>
     <RepositoryUrl>https://github.com/DeepSigma-LLC/Dotnet.DeepSigma.ElectoralSystem</RepositoryUrl>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <PackageIcon>Assets\DeepSigma.png</PackageIcon>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="DeepSigma.General" Version="1.5.0" />
     <PackageReference Include="DeepSigma.Mathematics" Version="1.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Assets\DeepSigma.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
