@@ -1,5 +1,5 @@
 ﻿
-using DeepSigma.General;
+using DeepSigma.Core;
 
 namespace DeepSigma.ElectoralSystem.Models;
 

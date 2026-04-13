@@ -1,6 +1,6 @@
-﻿using DeepSigma.General.Utilities;
+﻿using DeepSigma.Core.Utilities;
 using System.Security.Cryptography;
-using DeepSigma.General.Extensions;
+using DeepSigma.Core.Extensions;
 
 namespace DeepSigma.ElectoralSystem.Models;
 

@@ -1,4 +1,4 @@
-﻿using DeepSigma.General;
+﻿using DeepSigma.Core;
 using DeepSigma.Mathematics.Randomization;
 
 namespace DeepSigma.ElectoralSystem.Models;

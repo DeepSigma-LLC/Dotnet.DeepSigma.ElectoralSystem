@@ -2,8 +2,8 @@
 using DeepSigma.ElectoralSystem.Models;
 using DeepSigma.ElectoralSystem.Tests.Models;
 using System.Security.Cryptography;
-using DeepSigma.General.Utilities;
-using DeepSigma.General;
+using DeepSigma.Core.Utilities;
+using DeepSigma.Core;
 using DeepSigma.ElectoralSystem.Enums;
 
 namespace DeepSigma.ElectoralSystem.Tests.Tests;
